@@ -60,4 +60,57 @@ exports.fn = function(item) {
         item.removeAttr('transform');
     }
 
+    // move group fill attr to content's pathElems
+    if (
+        item.isElem('g') &&
+        item.hasAttr('fill') &&
+        !item.isEmpty() &&
+        !item.someAttr(function(attr) {
+            return ~attr.value.indexOf('url(');
+        }) &&
+        item.content.every(function(inner) {
+            return inner.isElem(pathElems) && !inner.hasAttr('id');
+        })
+    ) {
+        item.content.forEach(function(inner) {
+            var attr = item.attr('fill');
+            if (!inner.hasAttr('fill')) {
+                inner.addAttr({
+                    'name': attr.name,
+                    'local': attr.local,
+                    'prefix': attr.prefix,
+                    'value': attr.value
+                });
+            }
+        });
+
+        item.removeAttr('fill');
+    }
+
+    // move group stroke attr to content's pathElems
+    if (
+        item.isElem('g') &&
+        item.hasAttr('stroke') &&
+        !item.isEmpty() &&
+        !item.someAttr(function(attr) {
+            return ~attr.value.indexOf('url(');
+        }) &&
+        item.content.every(function(inner) {
+            return inner.isElem(pathElems) && !inner.hasAttr('id');
+        })
+    ) {
+        item.content.forEach(function(inner) {
+            var attr = item.attr('stroke');
+            if (!inner.hasAttr('stroke')) {
+                inner.addAttr({
+                    'name': attr.name,
+                    'local': attr.local,
+                    'prefix': attr.prefix,
+                    'value': attr.value
+                });
+            }
+        });
+
+        item.removeAttr('stroke');
+    }
 };
