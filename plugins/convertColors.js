@@ -11,6 +11,7 @@ exports.params = {
     names2hex: true,
     rgb2hex: true,
     shorthex: true,
+    longhex: false,
     shortname: true
 };
 
@@ -19,6 +20,7 @@ var collections = require('./_collections'),
     rComma = '\\s*,\\s*',
     regRGB = new RegExp('^rgb\\(\\s*' + rNumber + rComma + rNumber + rComma + rNumber + '\\s*\\)$'),
     regHEX = /^\#(([a-fA-F0-9])\2){3}$/,
+    regShortHEX = /^\#([a-fA-F0-9]){3}$/,
     none = /\bnone\b/i;
 
 /**
@@ -92,6 +94,11 @@ exports.fn = function(item, params) {
                 // Convert long hex to short hex
                 if (params.shorthex && (match = val.match(regHEX))) {
                     val = '#' + match[0][1] + match[0][3] + match[0][5];
+                }
+
+                // Convert short hex to long hex
+                if (params.longhex && (match = val.match(regShortHEX))) {
+                    val = '#' + match[0][1] + match[0][1] + match[0][2] + match[0][2] + match[0][3] + match[0][3];
                 }
 
                 // Convert hex to short name
