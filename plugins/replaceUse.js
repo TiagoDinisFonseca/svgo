@@ -19,7 +19,6 @@ exports.fn = function(data) {
     function addToDefs(item) {
         if (item.hasAttr('id')) {
             defs['#' + item.attr('id').value] = item;
-            item.removeAttr('id');
         }
     }
 
